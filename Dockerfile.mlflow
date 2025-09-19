@@ -1,0 +1,4 @@
+FROM ghcr.io/mlflow/mlflow:v2.13.2
+
+# install psycopg2 driver biar bisa connect ke Postgres
+RUN pip install --no-cache-dir psycopg2-binary
