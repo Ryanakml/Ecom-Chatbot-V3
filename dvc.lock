@@ -1,0 +1,72 @@
+schema: '2.0'
+stages:
+  ingest_intent_data:
+    cmd: python ml/data/ingest_data.py --dataset intent
+    deps:
+    - path: ml/data/ingest_data.py
+      hash: md5
+      md5: 6bbea13243764b9d809878a9240a2668
+      size: 5375
+    - path: ml/data/load_data.py
+      hash: md5
+      md5: 5487a8b82b05a6d39a96b75696dff4a0
+      size: 3370
+    outs:
+    - path: ml/data/raw/intent_clinc150
+      hash: md5
+      md5: 502652279011fb413822b67e961526bd.dir
+      size: 1841856
+      nfiles: 3
+  ingest_ner_data:
+    cmd: python ml/data/ingest_data.py --dataset ner
+    deps:
+    - path: ml/data/ingest_data.py
+      hash: md5
+      md5: 6bbea13243764b9d809878a9240a2668
+      size: 5375
+    - path: ml/data/load_data.py
+      hash: md5
+      md5: 5487a8b82b05a6d39a96b75696dff4a0
+      size: 3370
+    outs:
+    - path: ml/data/raw/conll2003hf
+      hash: md5
+      md5: c402cc34b09dbc91563cfff27489b5af.dir
+      size: 4717275
+      nfiles: 3
+  preprocess_intent_data:
+    cmd: python ml/data/preprocess_data.py --dataset intent
+    deps:
+    - path: ml/data/preprocess_data.py
+      hash: md5
+      md5: aec30de20855170bb4fe14b2390da7a2
+      size: 6126
+    - path: ml/data/raw/intent_clinc150
+      hash: md5
+      md5: 502652279011fb413822b67e961526bd.dir
+      size: 1841856
+      nfiles: 3
+    outs:
+    - path: ml/data/processed/intent_clinc150
+      hash: md5
+      md5: 6d0037cbb74d30a201d0891806ac08f3.dir
+      size: 1475914
+      nfiles: 3
+  preprocess_ner_data:
+    cmd: python ml/data/preprocess_data.py --dataset ner
+    deps:
+    - path: ml/data/preprocess_data.py
+      hash: md5
+      md5: aec30de20855170bb4fe14b2390da7a2
+      size: 6126
+    - path: ml/data/raw/conll2003hf
+      hash: md5
+      md5: c402cc34b09dbc91563cfff27489b5af.dir
+      size: 4717275
+      nfiles: 3
+    outs:
+    - path: ml/data/processed/conll2003hf
+      hash: md5
+      md5: 93116166a75ef6d1435b6d7d9ed4133b.dir
+      size: 4717275
+      nfiles: 3
