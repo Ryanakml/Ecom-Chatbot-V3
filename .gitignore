@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+ml/notebooks/
+
+# Artifacts / logs / experiments
+artifacts/
+mlruns/
+*.log
+
+# Data dumps (opsional, sesuaikan)
+*.csv
+*.jsonl
+*.pkl
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Lokal folder sementara
+1/
