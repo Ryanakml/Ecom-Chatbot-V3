@@ -35,6 +35,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    container_name: elasticsearch_db
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false # Disable security for local dev ONLY
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Limit memory usage
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   mlflow:
     build:
@@ -62,3 +79,4 @@ services:
 volumes:
   postgres_data:
   minio_data:
+  es_data:

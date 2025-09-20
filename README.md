@@ -43,3 +43,28 @@ This project uses Docker Compose to manage local development infrastructure.
     - **Postgres (Database):** Accessible at `localhost:5432`
 
 ---
+
+
+## Project Structure
+
+```
+.
+├── ci/
+├── docs/
+├── dvc/
+├── infra/
+├── labeling/
+├── ml/
+│   ├── data/
+│   ├── experiments/
+│   └── notebooks/
+└── services/
+    ├── agent-ui/
+    ├── api/
+    └── worker/
+```
+
+
+```bash
+mkdir -p project/{ci,docs,dvc,infra,labeling,ml/{data,experiments,notebooks},services/{agent-ui,api,worker}}
+```
