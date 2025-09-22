@@ -1,11 +1,11 @@
 stages:
-  ingest_ner_data:
-    cmd: python ml/data/ingest_data.py --dataset ner
+  ingest_intent_data:
+    cmd: python ml/data/ingest_data.py --dataset intent
     deps:
     - ml/data/ingest_data.py
     - ml/data/load_data.py
     outs:
-    - ml/data/raw/conll2003hf
+    - ml/data/raw/intent_clinc150
   preprocess_intent_data:
     cmd: python ml/data/preprocess_data.py --dataset intent
     deps:
