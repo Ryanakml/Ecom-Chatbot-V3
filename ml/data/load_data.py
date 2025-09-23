@@ -2,35 +2,61 @@ import os
 import json
 import argparse
 from datasets import load_dataset
+from sklearn.model_selection import train_test_split
 
-def load_intent_data(output_dir: str):
+def load_intent_data(output_dir: str, train_ratio=0.8, val_ratio=0.1, test_ratio=0.1, seed=42):
     """
-    Downloads and processes the CLINC150 dataset for intent classification.
+    Downloads and processes the Bitext E-commerce dataset for intent classification.
 
     This dataset contains 150 intent classes and one 'out_of_scope' class,
     making it ideal for real-world chatbot applications.
 
     Args:
-        output_dir: The directory to save the processed data.
+        output_dir: The directory t2o save the processed data.
     """
-    dataset_name = "clinc_oos"
-    print(f"Downloading intent dataset: '{dataset_name}'...")
-    dataset = load_dataset(dataset_name, 'plus')
+    dataset_name = "bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+    dataset = load_dataset(dataset_name)
 
     # Create the directory if it doesn't exist
-    save_path = os.path.join(output_dir, "intent_clinc150")
+    save_path = os.path.join(output_dir, "intent_bitext")
     os.makedirs(save_path, exist_ok=True)
     print(f"Saving data to '{save_path}'...")
 
-    for split in dataset.keys():
+    # Train data
+    full_train = dataset['train']
+
+    # Split train vs temp (val+test)
+    train_test = full_train.train_test_split(test_size=(1-train_ratio), seed=seed)
+    train_data = train_test['train']
+    temp_data = train_test['test']
+
+    # Split temp (val+test) into val and test
+    val_test = temp_data.train_test_split(
+        test_size=test_ratio / (val_ratio + test_ratio),
+        seed=seed
+    )
+    val_data = val_test['train']
+    test_data = val_test['test']
+
+    # Export to jsonl file
+    splits = {
+        "train": train_data,
+        "val": val_data,
+        "test": test_data
+    }
+
+    for split, dset in splits.items():
         file_path = os.path.join(save_path, f"{split}.jsonl")
         with open(file_path, 'w') as f:
-            for example in dataset[split]:
+            for example in dset:
                 # Get the string label from the integer class
-                intent_label = dataset[split].features['intent'].int2str(example['intent'])
-                record = {'text': example['text'], 'label': intent_label}
+                record = {
+                    'text': example['instruction'],
+                    'label': example['intent']
+                }
                 f.write(json.dumps(record) + '\n')
-    print(f"Successfully exported intent data to '{save_path}'.")
+        print(f"Exported {split} -> {file_path} ({len(dset)} samples)")
+    print(f"Successfully exported intent dataset with train/val/test splits to '{save_path}'.")
 
 
 def load_ner_data(output_dir: str):
@@ -75,7 +101,7 @@ if __name__ == "__main__":
         type=str,
         required=True,
         choices=['intent', 'ner'],
-        help="The type of dataset to download ('intent' for CLINC150, 'ner' for CoNLL-2003)."
+        help="The type of dataset to download ('intent' for Bitext E-commerce, 'ner' for CoNLL-2003)."
     )
     parser.add_argument(
         "--output-dir",
