@@ -5,18 +5,11 @@ stages:
     - ml/data/ingest_data.py
     - ml/data/load_data.py
     outs:
-    - ml/data/raw/intent_clinc150
+    - ml/data/raw/intent_bitext
   preprocess_intent_data:
     cmd: python ml/data/preprocess_data.py --dataset intent
     deps:
-    - ml/data/raw/intent_clinc150
+    - ml/data/raw/intent_bitext
     - ml/data/preprocess_data.py
     outs:
-    - ml/data/processed/intent_clinc150
-  preprocess_ner_data:
-    cmd: python ml/data/preprocess_data.py --dataset ner
-    deps:
-    - ml/data/raw/conll2003hf
-    - ml/data/preprocess_data.py
-    outs:
-    - ml/data/processed/conll2003hf
+    - ml/data/processed/intent_bitext
