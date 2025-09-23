@@ -116,7 +116,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Define the local path based on dataset type
-    dataset_name = "intent_clinc150" if args.dataset == 'intent' else "conll2003hf"
+    dataset_name = "intent_bitext" if args.dataset == 'intent' else "conll2003hf"
     local_raw_path = os.path.join('ml', 'data', 'raw', dataset_name)
 
     # 1. Run the script to download data locally
