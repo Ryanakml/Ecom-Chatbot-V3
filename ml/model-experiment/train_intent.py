@@ -46,7 +46,7 @@ mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 mlflow.pytorch.autolog(disable=True)
 
 try:
-    mlflow.set_experiment("intent-classification")
+    mlflow.set_experiment("intent-classification-bitext")
 except Exception as e:
     logging.warning(f"Could not set MLflow experiment: {e}")
 
@@ -77,7 +77,7 @@ class IntentDataModule(pl.LightningDataModule):
     def load_data(self, split: str) -> pd.DataFrame:
         """Loads data from a .jsonl file using DVC API."""
         try:
-            file_path = f"ml/data/processed/intent_clinc150/{split}.jsonl"
+            file_path = os.path.join(self.data_path, f'{split}.jsonl')
             with dvc.api.open(file_path, repo='.', rev='HEAD', mode='r') as f:
                 data = []
                 for line in f:
@@ -99,7 +99,7 @@ class IntentDataModule(pl.LightningDataModule):
         logging.info("Loading and preprocessing data...")
         
         train_df = self.load_data("train")
-        val_df = self.load_data("validation")
+        val_df = self.load_data("val")
         test_df = self.load_data("test")
 
         # Fit vectorizer and label encoder on training data
@@ -232,7 +232,7 @@ def main():
     parser.add_argument("--max-epochs", type=int, default=5, help="Maximum epochs")
     parser.add_argument("--hidden-dim", type=int, default=128, help="Hidden dimension")
     parser.add_argument("--dropout-rate", type=float, default=0.3, help="Dropout rate")
-    parser.add_argument("--data-path", type=str, default="ml/data/processed/intent_clinc150", 
+    parser.add_argument("--data-path", type=str, default="ml/data/processed/intent_bitext", 
                        help="Path to the data directory")
     parser.add_argument("--quiet", action="store_true", help="Reduce output verbosity")
     args = parser.parse_args()
@@ -256,7 +256,7 @@ def main():
     # MLflow Logger
     try:
         mlf_logger = MLFlowLogger(
-            experiment_name="intent-classification",
+            experiment_name="intent-classification-bitext",
             tracking_uri=MLFLOW_TRACKING_URI
         )
     except Exception as e:
