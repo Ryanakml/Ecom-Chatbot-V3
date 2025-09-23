@@ -141,7 +141,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    dataset_name = "intent_clinc150" if args.dataset == 'intent' else "conll2003hf"
+    dataset_name = "intent_bitext" if args.dataset == 'intent' else "conll2003hf"
     raw_local_path = os.path.join('ml', 'data', 'raw', dataset_name)
     processed_local_path = os.path.join('ml', 'data', 'processed', dataset_name)
 
